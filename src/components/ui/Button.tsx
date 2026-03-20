@@ -1,35 +1,53 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import Spinner from './Spinner';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'orange' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
+  fullWidth?: boolean;
+  children: ReactNode;
 }
 
-const base = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
-
-const variants: Record<string, string> = {
-  primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',
-  secondary: 'bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-400',
-  danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-  ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-400',
+const variantStyles = {
+  primary: 'btn-brand text-white',
+  secondary: 'bg-white border-2 border-[--brand] text-[--brand] hover:bg-[--brand-light] transition-colors',
+  orange: 'btn-orange text-white',
+  ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 transition-colors',
+  danger: 'bg-red-500 hover:bg-red-600 text-white transition-colors',
 };
 
-const sizes: Record<string, string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+const sizeStyles = {
+  sm: 'px-3 py-1.5 text-xs rounded-md',
+  md: 'px-5 py-2.5 text-sm rounded-lg',
+  lg: 'px-6 py-3 text-base rounded-lg',
 };
 
-export default function Button({ variant = 'primary', size = 'md', loading, children, className = '', ...props }: Props) {
+export default function Button({
+  variant = 'primary',
+  size = 'md',
+  loading = false,
+  fullWidth = false,
+  children,
+  disabled,
+  className = '',
+  ...props
+}: ButtonProps) {
   return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} disabled={loading || props.disabled} {...props}>
-      {loading && (
-        <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
-      )}
+    <button
+      disabled={disabled || loading}
+      className={`
+        inline-flex items-center justify-center gap-2
+        font-semibold select-none
+        disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none
+        ${variantStyles[variant]}
+        ${sizeStyles[size]}
+        ${fullWidth ? 'w-full' : ''}
+        ${className}
+      `.trim()}
+      {...props}
+    >
+      {loading && <Spinner className="h-4 w-4" />}
       {children}
     </button>
   );

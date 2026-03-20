@@ -1,43 +1,65 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { ChevronRightIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { getOrders } from '../api/endpoints';
 import Spinner from '../components/ui/Spinner';
-
-const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-700',
-  confirmed: 'bg-blue-100 text-blue-700',
-  processing: 'bg-indigo-100 text-indigo-700',
-  completed: 'bg-green-100 text-green-700',
-  cancelled: 'bg-red-100 text-red-700',
-};
+import Badge, { statusVariant } from '../components/ui/Badge';
 
 export default function OrdersPage() {
-  const { data: orders, isLoading } = useQuery({ queryKey: ['orders'], queryFn: () => getOrders().then(r => r.data) });
+  const { data: orders, isLoading } = useQuery({
+    queryKey: ['orders'],
+    queryFn: () => getOrders().then((r) => r.data),
+  });
 
   if (isLoading) return <div className="flex justify-center py-20"><Spinner /></div>;
 
   return (
-    <div className="px-4 py-4 max-w-2xl mx-auto">
-      <h1 className="text-lg font-semibold mb-4">My Orders</h1>
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-100 px-4 py-3">
+        <h1 className="text-base font-bold text-gray-900">My Orders</h1>
+        {orders && <p className="text-xs text-gray-400 mt-0.5">{orders.length} orders</p>}
+      </div>
+
       {orders?.length ? (
-        <div className="space-y-3">
-          {orders.map(o => (
-            <Link key={o.id} to={`/orders/${o.id}`} className="block bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Order #{o.id.slice(0, 8)}</p>
-                  <p className="text-xs text-gray-500 mt-1">{new Date(o.created_at).toLocaleDateString()}</p>
+        <div className="divide-y divide-gray-100 bg-white mt-2">
+          {orders.map((o) => (
+            <Link
+              key={o.id}
+              to={`/orders/${o.id}`}
+              className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 transition-colors"
+            >
+              {/* Icon */}
+              <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                <ShoppingBagIcon className="h-5 w-5 text-[--brand]" />
+              </div>
+
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900">Order #{o.id.slice(0, 8).toUpperCase()}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{new Date(o.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                <div className="mt-1.5">
+                  <Badge variant={statusVariant(o.status)}>{o.status}</Badge>
                 </div>
-                <div className="text-right">
-                  <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[o.status] || 'bg-gray-100 text-gray-700'}`}>{o.status}</span>
-                  <p className="text-sm font-bold text-gray-900 mt-1">₹{o.total_price.toLocaleString()}</p>
-                </div>
+              </div>
+
+              {/* Amount + arrow */}
+              <div className="text-right shrink-0">
+                <p className="text-sm font-bold text-gray-900">₹{o.total_price.toLocaleString('en-IN')}</p>
+                <ChevronRightIcon className="h-4 w-4 text-gray-400 mt-1 ml-auto" />
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-gray-500">You haven't placed any orders yet.</p>
+        <div className="text-center py-16">
+          <ShoppingBagIcon className="h-16 w-16 mx-auto text-gray-200 mb-4" />
+          <p className="text-sm font-semibold text-gray-500">No orders yet</p>
+          <p className="text-xs text-gray-400 mt-1">Your orders will appear here</p>
+          <Link to="/products" className="inline-block mt-4 px-5 py-2 btn-brand text-white text-sm rounded-lg font-semibold">
+            Start Shopping
+          </Link>
+        </div>
       )}
     </div>
   );

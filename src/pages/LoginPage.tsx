@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { EnvelopeIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { requestOtp, verifyOtp } from '../api/endpoints';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -52,50 +53,88 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-indigo-600">Udaya Tech</h1>
-          <p className="mt-1 text-sm text-gray-500">Sign in to your account</p>
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--brand)' }}>
+      {/* Hero panel */}
+      <div className="px-8 pt-16 pb-10 flex flex-col items-center text-center">
+        <div className="mb-2">
+          <span className="text-white font-extrabold text-3xl italic tracking-tight">Udaya</span>
+          <span className="text-yellow-300 font-extrabold text-3xl ml-1">Tech</span>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          {step === 'email' ? (
-            <form onSubmit={handleEmail} className="space-y-4">
+        <p className="text-blue-100 text-sm font-medium mt-1">Your trusted tech partner</p>
+        <div className="mt-6 text-5xl">🛒</div>
+        <p className="mt-4 text-white/80 text-xs max-w-xs leading-relaxed">
+          Login to access exclusive deals on products & services
+        </p>
+      </div>
+
+      {/* White card */}
+      <div className="flex-1 bg-white rounded-t-3xl px-6 pt-8 pb-8 shadow-2xl">
+        <h2 className="text-xl font-bold text-gray-900 mb-1">
+          {step === 'email' ? 'Sign In' : 'Verify OTP'}
+        </h2>
+        <p className="text-sm text-gray-500 mb-6">
+          {step === 'email'
+            ? 'Enter your email to receive a one-time password'
+            : `Code sent to ${email}`}
+        </p>
+
+        {step === 'email' ? (
+          <form onSubmit={handleEmail} className="space-y-4">
+            <Input
+              label="Email address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              icon={<EnvelopeIcon className="h-4 w-4" />}
+              required
+              autoFocus
+            />
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg px-3 py-2">{error}</div>
+            )}
+            <Button type="submit" loading={loading} fullWidth size="lg">
+              Send OTP
+            </Button>
+          </form>
+        ) : (
+          <form onSubmit={handleOtp} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">
+                Verification Code
+              </label>
               <Input
-                label="Email address"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                autoFocus
-              />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" loading={loading} className="w-full">Send OTP</Button>
-            </form>
-          ) : (
-            <form onSubmit={handleOtp} className="space-y-4">
-              <p className="text-sm text-gray-600">Enter the 6-digit code sent to <strong>{email}</strong></p>
-              <Input
-                label="Verification code"
                 type="text"
                 inputMode="numeric"
                 maxLength={6}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                 placeholder="000000"
+                className="text-center text-2xl tracking-[0.5em] font-mono"
+                icon={<KeyIcon className="h-4 w-4" />}
                 required
                 autoFocus
-                className="text-center text-2xl tracking-[0.5em] font-mono"
               />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" loading={loading} className="w-full">Verify</Button>
-              <button type="button" onClick={() => { setStep('email'); setOtp(''); setError(''); }} className="w-full text-sm text-gray-500 hover:text-indigo-600">
-                Use a different email
-              </button>
-            </form>
-          )}
-        </div>
+            </div>
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg px-3 py-2">{error}</div>
+            )}
+            <Button type="submit" loading={loading} fullWidth size="lg">
+              Verify &amp; Login
+            </Button>
+            <button
+              type="button"
+              onClick={() => { setStep('email'); setOtp(''); setError(''); }}
+              className="w-full text-sm text-[--brand] font-medium hover:underline"
+            >
+              ← Use a different email
+            </button>
+          </form>
+        )}
+
+        <p className="mt-8 text-center text-xs text-gray-400">
+          By continuing, you agree to our Terms &amp; Privacy Policy
+        </p>
       </div>
     </div>
   );
