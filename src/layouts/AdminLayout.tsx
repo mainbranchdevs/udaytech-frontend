@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import AdminSidebar from '../components/layout/AdminSidebar';
 import { useAuth } from '../hooks/useAuth';
-import { BellIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { BellIcon } from '@heroicons/react/24/outline';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 
 function Breadcrumb() {

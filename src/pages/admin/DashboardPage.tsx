@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const todayOrders = orders?.filter((o) => new Date(o.created_at).toDateString() === today) ?? [];
   const yesterdayOrders = orders?.filter((o) => new Date(o.created_at).toDateString() === yesterday) ?? [];
   const pending = orders?.filter((o) => o.status === 'pending') ?? [];
-  const totalRevenue = orders?.reduce((sum, o) => sum + o.total_price, 0) ?? 0;
+  // totalRevenue is unused
   const yesterdayRevenue = yesterdayOrders.reduce((sum, o) => sum + o.total_price, 0);
   const todayRevenue = todayOrders.reduce((sum, o) => sum + o.total_price, 0);
 
