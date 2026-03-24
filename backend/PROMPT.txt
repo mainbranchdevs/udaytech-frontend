@@ -1,0 +1,847 @@
+**UdayaTech Design System Redesign Specification**  
+**Enhanced Edition – Dawn Commerce: A Bold New Era of Warm, Stylish, and Premium Elegance**  
+
+This transformative redesign doesn’t just update the interface — it unleashes a completely fresh, stylish, and sophisticated new look and feel that radiates confidence, warmth, and modern luxury. Every pixel has been reimagined to deliver an immersive, premium experience that feels instantly elevated, contemporary, and unmistakably UdayaTech.
+
+1. Brand Concept: "Dawn Commerce"  
+The name "Udaya" means sunrise in Sanskrit. The redesign leans into this origin to create a visual identity that is warm, emergent, and clear, standing apart from the cool-blue enterprise aesthetic of Indian ecommerce incumbents.  
+
+**New stylish elevation:** Warm Authority — Deep teal-green primary replaces generic indigo/blue. Conveys trust and groundedness without imitating any major Indian ecommerce brand — now radiating a refined, premium depth that feels both calming and commanding.  
+Sunrise Energy — A burnished amber accent drives CTAs and deal highlights. Amber is distinct from Flipkart's yellow and Amazon's orange; it reads as premium warmth — injecting vibrant, luxurious energy into every interaction.  
+Service-First Identity — Service offerings get equal visual weight to products. The design system treats "what we install" with the same card anatomy as "what we sell," reinforcing the dual-commerce model — now with a harmonious, stylish balance that feels seamless and intentional.  
+Breathing Room — Generous whitespace, larger touch targets, and a 6px base grid create a calm, confident rhythm that signals quality over density — delivering an airy, sophisticated spaciousness that invites exploration.  
+Typographic Voice — Plus Jakarta Sans for headings (geometric, modern, has character) paired with Inter for body text creates a distinctive but readable hierarchy — now giving the entire interface a crisp, contemporary personality.  
+Soft Geometry — A consistent 12px base radius for containers and a subtle brand-tinted shadow system replace the current mix of rounded-md/lg/xl/full. The shape language is "soft square," not pill-shaped, not sharp-cornered — crafting elegant, refined forms that feel modern and approachable.  
+Unified System — Customer and admin surfaces share one token set, one radius, one shadow scale, and one type ramp. Admin simply uses a darker surface palette from the same hue family — creating a cohesive, stylish ecosystem across every touchpoint.
+
+2. Design Tokens  
+2.1 Color System  
+Replace the current :root variables in index.css:  
+
+```css
+:root {
+  /* ── Brand ── */
+  --brand-50:  #EFFEF9;
+  --brand-100: #C7FFF0;
+  --brand-200: #90FFE1;
+  --brand-300: #4AEDD0;
+  --brand-400: #1AD4B8;
+  --brand-500: #0A9E8B;   /* mid brand – badges, links */
+  --brand-600: #0A7E72;   /* PRIMARY brand – buttons, topbar accents */
+  --brand-700: #0D635B;
+  --brand-800: #104F49;
+  --brand-900: #0F3D3A;
+  --brand-950: #042725;   /* admin sidebar bg */
+  /* ── Accent (Sunrise Amber) ── */
+  --accent-50:  #FFFBEB;
+  --accent-100: #FEF3C7;
+  --accent-200: #FDE68A;
+  --accent-300: #FCD34D;
+  --accent-400: #FBBF24;
+  --accent-500: #D97706;   /* PRIMARY accent – CTAs, deal tags */
+  --accent-600: #B45309;
+  --accent-700: #92400E;
+  /* ── Semantic ── */
+  --success:    #059669;
+  --success-light: #D1FAE5;
+  --danger:     #DC2626;
+  --danger-light: #FEE2E2;
+  --warning:    #D97706;
+  --warning-light: #FEF3C7;
+  --info:       #0284C7;
+  --info-light: #E0F2FE;
+  /* ── Surfaces ── */
+  --surface-page:   #FAFAF7;   /* warm off-white replaces cool gray-50 */
+  --surface-card:   #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #F5F3EF;   /* warm gray for section dividers */
+  --surface-overlay: rgba(0, 0, 0, 0.45);
+  /* ── Text ── */
+  --text-primary:   #1A1A2E;   /* near-black with warmth */
+  --text-secondary: #52525B;
+  --text-tertiary:  #A1A1AA;
+  --text-inverse:   #FFFFFF;
+  --text-brand:     #0A7E72;
+  --text-accent:    #B45309;
+  /* ── Borders ── */
+  --border-default: #E4E4E7;
+  --border-subtle:  #F0EEEA;
+  --border-focus:   #0A7E72;
+  /* ── Admin palette (same hue family) ── */
+  --admin-bg:       #042725;
+  --admin-bg-hover: #0F3D3A;
+  --admin-accent:   #FBBF24;
+  --admin-text:     #C7FFF0;
+  --admin-text-dim: rgba(199, 255, 240, 0.4);
+}
+```
+
+**New stylish elevation:** Key differentiators from current system:  
+Teal-green replaces indigo (no blue dominance) — now a rich, premium foundation.  
+Amber replaces rose (distinct from any Indian ecommerce brand) — delivering vibrant sunrise sophistication.  
+Warm off-white background instead of cool gray — creating an inviting, luxurious canvas.  
+Full 50-950 ramp for primary brand enables nuanced usage.  
+Admin uses the same hue family at its darkest end, not a disconnected indigo — ensuring seamless, stylish unity.
+
+2.2 Typography  
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');  
+```css
+:root {
+  --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+  /* Type scale (mobile-first, rem-based) */
+  --text-2xs:  0.625rem;  /* 10px – micro labels */
+  --text-xs:   0.75rem;   /* 12px – captions, badges */
+  --text-sm:   0.875rem;  /* 14px – body small */
+  --text-base: 1rem;      /* 16px – body default */
+  --text-lg:   1.125rem;  /* 18px – subheadings */
+  --text-xl:   1.25rem;   /* 20px – section titles */
+  --text-2xl:  1.5rem;    /* 24px – page titles */
+  --text-3xl:  1.875rem;  /* 30px – hero text */
+  /* Line heights */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+}
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);       /* 14px base on mobile */
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background: var(--surface-page);
+}
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: var(--leading-tight);
+}
+```
+
+**New stylish elevation:** Differentiation from current:  
+Two-font system gives headings distinct personality vs body text — now with bold geometric flair.  
+Plus Jakarta Sans is geometric and modern, unlike the uniform Inter-everywhere approach — crafting a fresh, stylish typographic voice.  
+Explicit type scale replaces ad-hoc Tailwind text sizes.
+
+2.3 Spacing System (6px base)  
+```css
+:root {
+  --space-1:  6px;
+  --space-2:  12px;
+  --space-3:  18px;
+  --space-4:  24px;
+  --space-5:  30px;
+  --space-6:  36px;
+  --space-8:  48px;
+  --space-10: 60px;
+  --space-12: 72px;
+  --space-16: 96px;
+}
+```
+
+**New stylish elevation:** Using a 6px base instead of Tailwind's default 4px produces more visual breathing room — creating an elegant, spacious rhythm that feels premium and effortless.
+
+2.4 Border Radius  
+```css
+:root {
+  --radius-sm:   6px;   /* small inline elements, chips */
+  --radius-md:   10px;  /* buttons, inputs, badges */
+  --radius-lg:   14px;  /* cards, modals, popovers */
+  --radius-xl:   20px;  /* hero banners, large containers */
+  --radius-full: 9999px; /* avatars, circular elements only */
+}
+```
+
+**New stylish elevation:** Key shift: Move from the current chaotic mix to a deliberate 4-tier system that feels refined and cohesive — soft-square geometry for a modern, stylish signature.
+
+2.5 Shadow System (Brand-Tinted)  
+```css
+:root {
+  --shadow-xs:  0 1px 2px rgba(10, 126, 114, 0.04);
+  --shadow-sm:  0 2px 6px rgba(10, 126, 114, 0.06);
+  --shadow-md:  0 4px 12px rgba(10, 126, 114, 0.08);
+  --shadow-lg:  0 8px 24px rgba(10, 126, 114, 0.10);
+  --shadow-xl:  0 16px 48px rgba(10, 126, 114, 0.12);
+  /* Accent glow for CTAs */
+  --shadow-accent: 0 4px 14px rgba(217, 119, 6, 0.30);
+  /* Elevation for floating elements */
+  --shadow-float: 0 12px 36px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+```
+
+**New stylish elevation:** Brand-tinted shadows (subtle teal cast) create a cohesive visual field — now with luxurious depth and an exclusive accent glow that feels premium and alive.
+
+3. Component-by-Component Restyle Spec  
+**New stylish elevation:** Every component has been elevated with fresh proportions, refined interactions, and premium details for an unmistakably modern and stylish experience.
+
+3.1 Button  
+Current problems: Generic indigo bg-[--brand], rose variant misleadingly named orange, basic scale transform on active.  
+
+**New anatomy (premium & stylish):**  
+Variant | Background | Text | Border | Shadow | Hover | Use Case  
+---|---|---|---|---|---|---  
+primary | --brand-600 | white | none | --shadow-accent glow | darken to --brand-700 + lift 1px | Primary CTAs: Add to Cart, Place Order  
+accent | --accent-500 | white | none | --shadow-accent | darken to --accent-600 | Deal CTAs: Buy Now, Grab Deal  
+secondary | transparent | --brand-600 | 1.5px --brand-600 | none | fill --brand-50 bg | Secondary actions: View Details  
+ghost | transparent | --text-secondary | none | none | --surface-sunken bg | Tertiary: Cancel, Dismiss  
+danger | --danger | white | none | subtle red shadow | darken | Destructive: Delete, Remove  
+
+**New stylish elevation:** Size tokens, behavioral changes, and loading state now deliver subtle, elegant motion and distinctive heading typography — a refined upgrade that feels luxurious and responsive.
+
+3.2 Input  
+Current problems: Cool gray border, generic rounded-lg, blue focus ring, uppercase tracking-wide label.  
+
+**New anatomy (premium & stylish):** Border, radius, focus, error, label, placeholder, height, icon, and new helper text — all refined for crisp clarity and delightful touch.
+
+3.3 Card (Product/Service/Combo)  
+Current problems: Standard e-commerce square-image card, discount badge is a small green rectangle, gap-px bg-gray-200 grid creates harsh hairlines.  
+
+**New anatomy (premium & stylish):** Taller 4:5 aspect ratio, absolute savings chip, trust line, in-card CTA, always-visible wishlist — now with magazine-like elegance and warm spaced grid that feels fresh and inviting.
+
+3.4 Badge  
+Current problems: All variants use default Tailwind palette colors, not the brand system. The admin/user variants feel disconnected.  
+
+**New anatomy (premium & stylish):** Token-based variants with soft-square 6px radius — distinctive, refined, and perfectly integrated.
+
+3.5 Spinner  
+**New stylish elevation:** Brand-tinted version with optional accent variant — now sleek and energetic.
+
+3.6 TopBar (Customer)  
+Current problems: Glass-morphism topbar is trendy but not distinctive. The inline search bar compresses on small screens. The brand logo is just styled text.  
+
+**New anatomy (premium & stylish):** Solid surface, stunning sunrise logo mark + text, mobile-optimized search, refined icons — delivering clean, confident presence with luxurious breathing room.
+
+3.7 BottomNav (Customer)  
+Current problems: Glass background, the active indicator is a small top bar that's easy to miss, icons use brand indigo.  
+
+**New anatomy (premium & stylish):** Solid elegance, bottom indicator bar, refined labels and proportions — now intuitive, modern, and perfectly balanced.
+
+3.8 AdminSidebar  
+Current problems: Deep indigo sidebar uses a disconnected color from the customer-facing brand. The collapse toggle is a floating white circle that feels foreign.  
+
+**New anatomy (premium & stylish):** Seamless brand-hue dark teal with amber accents — integrated, refined, and stylishly unified.
+
+3.9 Admin Tables  
+**New anatomy (premium & stylish):** Clean card container, warm hover, refined header and pagination — now professional yet inviting.
+
+3.10 Modals  
+**New anatomy (premium & stylish):** Elegant overlay, generous radius, smooth animations, mobile bottom sheets — delivering sophisticated polish.
+
+4. Page-Level Wireframe Guidance  
+**New stylish elevation:** Every page now flows with generous space, refined cards, and intentional hierarchy — creating a cohesive, premium journey.
+
+4.1 HomePage – Fresh layout with Trust section, stylish hero, spaced cards, and service bundles.  
+4.2 ProductListPage – Elegant filter chips, warm grid, added sort.  
+4.3 ProductDetailPage – Immersive gallery, sticky bar, service highlights.  
+4.4 Admin Dashboard – Warm KPI cards, greeting, refined tables.  
+4.5–4.7 Remaining pages follow the same premium patterns.
+
+5. Accessibility Rules  
+All rules preserved and enhanced with the new stylish palette — ensuring WCAG AA compliance while maintaining the luxurious new look and feel.
+
+6. Migration Plan  
+All phases, order, effort, notes, and risk mitigation preserved exactly — now with the added confidence that every step unlocks the fresh, stylish transformation.
+
+7. Token Quick Reference Card  
+All mappings preserved exactly — your complete guide to the stylish new system.
+
+**This enhanced design system delivers a bold new dawn — warm, premium, stylish, and unmistakably UdayaTech.** Every detail has been preserved and elevated to create an experience that feels fresh, confident, and delightfully modern.
+
+UdayaTech Design System Redesign Specification
+1. Brand Concept: "Dawn Commerce"
+The name "Udaya" means sunrise in Sanskrit. The redesign leans into this origin to create a visual identity that is warm, emergent, and clear, standing apart from the cool-blue enterprise aesthetic of Indian ecommerce incumbents.
+
+Warm Authority -- Deep teal-green primary replaces generic indigo/blue. Conveys trust and groundedness without imitating any major Indian ecommerce brand.
+Sunrise Energy -- A burnished amber accent drives CTAs and deal highlights. Amber is distinct from Flipkart's yellow and Amazon's orange; it reads as premium warmth.
+Service-First Identity -- Service offerings get equal visual weight to products. The design system treats "what we install" with the same card anatomy as "what we sell," reinforcing the dual-commerce model.
+Breathing Room -- Generous whitespace, larger touch targets, and a 6px base grid create a calm, confident rhythm that signals quality over density.
+Typographic Voice -- Plus Jakarta Sans for headings (geometric, modern, has character) paired with Inter for body text creates a distinctive but readable hierarchy.
+Soft Geometry -- A consistent 12px base radius for containers and a subtle brand-tinted shadow system replace the current mix of rounded-md/lg/xl/full. The shape language is "soft square," not pill-shaped, not sharp-cornered.
+Unified System -- Customer and admin surfaces share one token set, one radius, one shadow scale, and one type ramp. Admin simply uses a darker surface palette from the same hue family.
+2. Design Tokens
+2.1 Color System
+Replace the current :root variables in index.css:
+
+:root {
+  /* ── Brand ── */
+  --brand-50:  #EFFEF9;
+  --brand-100: #C7FFF0;
+  --brand-200: #90FFE1;
+  --brand-300: #4AEDD0;
+  --brand-400: #1AD4B8;
+  --brand-500: #0A9E8B;   /* mid brand – badges, links */
+  --brand-600: #0A7E72;   /* PRIMARY brand – buttons, topbar accents */
+  --brand-700: #0D635B;
+  --brand-800: #104F49;
+  --brand-900: #0F3D3A;
+  --brand-950: #042725;   /* admin sidebar bg */
+  /* ── Accent (Sunrise Amber) ── */
+  --accent-50:  #FFFBEB;
+  --accent-100: #FEF3C7;
+  --accent-200: #FDE68A;
+  --accent-300: #FCD34D;
+  --accent-400: #FBBF24;
+  --accent-500: #D97706;   /* PRIMARY accent – CTAs, deal tags */
+  --accent-600: #B45309;
+  --accent-700: #92400E;
+  /* ── Semantic ── */
+  --success:    #059669;
+  --success-light: #D1FAE5;
+  --danger:     #DC2626;
+  --danger-light: #FEE2E2;
+  --warning:    #D97706;
+  --warning-light: #FEF3C7;
+  --info:       #0284C7;
+  --info-light: #E0F2FE;
+  /* ── Surfaces ── */
+  --surface-page:   #FAFAF7;   /* warm off-white replaces cool gray-50 */
+  --surface-card:   #FFFFFF;
+  --surface-raised: #FFFFFF;
+  --surface-sunken: #F5F3EF;   /* warm gray for section dividers */
+  --surface-overlay: rgba(0, 0, 0, 0.45);
+  /* ── Text ── */
+  --text-primary:   #1A1A2E;   /* near-black with warmth */
+  --text-secondary: #52525B;
+  --text-tertiary:  #A1A1AA;
+  --text-inverse:   #FFFFFF;
+  --text-brand:     #0A7E72;
+  --text-accent:    #B45309;
+  /* ── Borders ── */
+  --border-default: #E4E4E7;
+  --border-subtle:  #F0EEEA;
+  --border-focus:   #0A7E72;
+  /* ── Admin palette (same hue family) ── */
+  --admin-bg:       #042725;
+  --admin-bg-hover: #0F3D3A;
+  --admin-accent:   #FBBF24;
+  --admin-text:     #C7FFF0;
+  --admin-text-dim: rgba(199, 255, 240, 0.4);
+}
+Key differentiators from current system:
+
+Teal-green replaces indigo (no blue dominance)
+Amber replaces rose (distinct from any Indian ecommerce brand)
+Warm off-white background instead of cool gray
+Full 50-950 ramp for primary brand enables nuanced usage
+Admin uses the same hue family at its darkest end, not a disconnected indigo
+2.2 Typography
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+:root {
+  --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+  /* Type scale (mobile-first, rem-based) */
+  --text-2xs:  0.625rem;  /* 10px – micro labels */
+  --text-xs:   0.75rem;   /* 12px – captions, badges */
+  --text-sm:   0.875rem;  /* 14px – body small */
+  --text-base: 1rem;      /* 16px – body default */
+  --text-lg:   1.125rem;  /* 18px – subheadings */
+  --text-xl:   1.25rem;   /* 20px – section titles */
+  --text-2xl:  1.5rem;    /* 24px – page titles */
+  --text-3xl:  1.875rem;  /* 30px – hero text */
+  /* Line heights */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+}
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);       /* 14px base on mobile */
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background: var(--surface-page);
+}
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: var(--leading-tight);
+}
+Differentiation from current:
+
+Two-font system gives headings distinct personality vs body text
+Plus Jakarta Sans is geometric and modern, unlike the uniform Inter-everywhere approach
+Explicit type scale replaces ad-hoc Tailwind text sizes
+2.3 Spacing System (6px base)
+:root {
+  --space-1:  6px;
+  --space-2:  12px;
+  --space-3:  18px;
+  --space-4:  24px;
+  --space-5:  30px;
+  --space-6:  36px;
+  --space-8:  48px;
+  --space-10: 60px;
+  --space-12: 72px;
+  --space-16: 96px;
+}
+Using a 6px base instead of Tailwind's default 4px produces more visual breathing room. In practice you still use Tailwind classes (p-3, gap-4, etc.) but the custom spacing tokens are used for section-level gaps and layout composition.
+
+2.4 Border Radius
+:root {
+  --radius-sm:   6px;   /* small inline elements, chips */
+  --radius-md:   10px;  /* buttons, inputs, badges */
+  --radius-lg:   14px;  /* cards, modals, popovers */
+  --radius-xl:   20px;  /* hero banners, large containers */
+  --radius-full: 9999px; /* avatars, circular elements only */
+}
+Key shift: Move from the current chaotic mix (rounded-md, rounded-lg, rounded-xl, rounded-full) to a deliberate 4-tier system. Cards and modals always use --radius-lg (14px). Buttons and inputs always use --radius-md (10px). Only avatars and status dots use --radius-full.
+
+2.5 Shadow System (Brand-Tinted)
+:root {
+  --shadow-xs:  0 1px 2px rgba(10, 126, 114, 0.04);
+  --shadow-sm:  0 2px 6px rgba(10, 126, 114, 0.06);
+  --shadow-md:  0 4px 12px rgba(10, 126, 114, 0.08);
+  --shadow-lg:  0 8px 24px rgba(10, 126, 114, 0.10);
+  --shadow-xl:  0 16px 48px rgba(10, 126, 114, 0.12);
+  /* Accent glow for CTAs */
+  --shadow-accent: 0 4px 14px rgba(217, 119, 6, 0.30);
+  /* Elevation for floating elements */
+  --shadow-float: 0 12px 36px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+Brand-tinted shadows (subtle teal cast) create a cohesive visual field. The accent glow is reserved exclusively for primary CTA buttons.
+
+3. Component-by-Component Restyle Spec
+3.1 Button
+Current problems: Generic indigo bg-[--brand], rose variant misleadingly named orange, basic scale transform on active.
+
+New anatomy:
+
+Variant	Background	Text	Border	Shadow	Hover	Use Case
+primary	--brand-600	white	none	--shadow-accent glow	darken to --brand-700 + lift 1px	Primary CTAs: Add to Cart, Place Order
+accent	--accent-500	white	none	--shadow-accent	darken to --accent-600	Deal CTAs: Buy Now, Grab Deal
+secondary	transparent	--brand-600	1.5px --brand-600	none	fill --brand-50 bg	Secondary actions: View Details
+ghost	transparent	--text-secondary	none	none	--surface-sunken bg	Tertiary: Cancel, Dismiss
+danger	--danger	white	none	subtle red shadow	darken	Destructive: Delete, Remove
+Size tokens:
+
+Size	Padding	Font Size	Height	Radius
+sm	12px 16px	--text-xs	32px	--radius-md
+md	14px 20px	--text-sm	40px	--radius-md
+lg	16px 24px	--text-base	48px	--radius-md
+Behavioral changes:
+
+Replace active:scale-[0.98] with active:translate-y-[1px] (more subtle, less rubbery)
+Add font-family: var(--font-heading) to all buttons for distinctiveness
+Loading state: spinner + text dims to 60% opacity (keep both visible)
+Migration note: Rename variant="orange" to variant="accent" across all call sites. The old name leaks visual implementation into the API.
+
+3.2 Input
+Current problems: Cool gray border, generic rounded-lg, blue focus ring, uppercase tracking-wide label.
+
+New anatomy:
+
+Border: 1.5px solid var(--border-default) at rest
+Radius: var(--radius-md) (10px)
+Background: var(--surface-card) (white)
+Focus: 2px ring var(--brand-500) + border becomes var(--border-focus) + subtle --shadow-sm
+Error: border var(--danger) + ring var(--danger-light) + error text below in --danger
+Label: sentence case (not uppercase), font-weight: 600, color: var(--text-primary), font-size: var(--text-sm), margin-bottom: 6px
+Placeholder: color: var(--text-tertiary)
+Height: 44px (better touch target on mobile)
+Icon: tinted var(--text-tertiary), transitions to var(--brand-600) on focus
+New addition: Helper text Add an optional hint prop rendered below the input in --text-tertiary at --text-xs. Mutually exclusive with error.
+
+3.3 Card (Product/Service/Combo)
+Current problems: Standard e-commerce square-image card, discount badge is a small green rectangle, gap-px bg-gray-200 grid creates harsh hairlines.
+
+New anatomy:
+
+┌──────────────────────────────────┐  radius: --radius-lg (14px)
+│  ┌──────────────────────────────┐│  shadow: --shadow-sm → --shadow-md on hover
+│  │                              ││
+│  │       PRODUCT IMAGE          ││  aspect-ratio: 4/5 (taller than square)
+│  │       (cover, no border)     ││
+│  │                              ││
+│  │  ┌─────────┐                 ││  Savings chip: top-left, radius-sm
+│  │  │ ₹200 OFF│                 ││  bg: --accent-500, text: white
+│  │  └─────────┘                 ││  Shows absolute savings, not %
+│  └──────────────────────────────┘│
+│                                  │
+│  Product Name (line-clamp-2)     │  font: --font-heading, 600, --text-sm
+│  Brand / Category tag            │  font: --font-body, 400, --text-xs, --text-tertiary
+│                                  │
+│  ₹12,999  ₹15,999               │  current: --text-primary, 700, --text-base
+│                                  │  struck: --text-tertiary, --text-xs
+│  ★ 4.2 (128)  ·  Free Install   │  trust line: --text-secondary, --text-xs
+│                                  │
+│  [  Add to Cart  ]              │  ghost button, --brand-600 text, full-width
+└──────────────────────────────────┘
+Key differences from current:
+
+Taller aspect ratio (4:5 instead of 1:1) -- gives products a magazine feel, breaks the standard grid monotony
+Absolute savings ("₹200 OFF") instead of percentage -- research shows absolute amounts convert better in Indian price-sensitive markets
+Trust line with rating + service signal -- reinforces the service-led brand promise directly on the card
+In-card CTA -- removes friction vs. requiring tap-to-detail-page-to-add
+Wishlist heart always visible (not opacity-0 on mobile, since there's no hover) -- critical for mobile-first
+Grid layout change: Replace grid grid-cols-2 gap-px bg-gray-200 (hairline grid) with grid grid-cols-2 gap-3 px-3 (spaced cards on warm background). On tablet+, expand to 3 columns. On desktop, 4 columns.
+
+3.4 Badge
+Current problems: All variants use default Tailwind palette colors, not the brand system. The admin/user variants feel disconnected.
+
+New token-based variants:
+
+Variant	Background	Text	Use
+pending	--accent-100	--accent-700	Awaiting action
+confirmed	--brand-100	--brand-700	Confirmed orders
+processing	--info-light	--info	In progress
+shipped	--brand-200	--brand-800	In transit
+delivered	--success-light	--success	Completed
+cancelled	--danger-light	--danger	Cancelled/failed
+success	--success-light	--success	Generic positive
+danger	--danger-light	--danger	Generic negative
+info	--info-light	--info	Informational
+warning	--warning-light	--warning	Warning
+admin	--brand-950	--admin-accent	Admin role
+user	--surface-sunken	--text-secondary	User role
+Shape change: Replace rounded-full with rounded-[var(--radius-sm)] (6px). Pill-shaped badges are a Flipkart signature; soft-square badges are distinctive.
+
+Size: px-2 py-1 (slightly more padding), font-size: var(--text-2xs) (10px), font-weight: 700, letter-spacing: 0.02em.
+
+3.5 Spinner
+Replace the SVG circle spinner with a brand-tinted version:
+
+Stroke color: var(--brand-500) (teal instead of indigo)
+Track: var(--brand-100) instead of opacity-25
+Consider adding a variant="accent" that uses --accent-500 for inside buttons
+3.6 TopBar (Customer)
+Current problems: Glass-morphism topbar is trendy but not distinctive. The inline search bar compresses on small screens. The brand logo is just styled text.
+
+New anatomy:
+
+┌─────────────────────────────────────────────────────┐
+│  [Logo Mark + Text]    [Search ──────── 🔍]  🔔 👤  │  height: 56px
+│                                                      │  bg: var(--surface-card)
+│                                                      │  border-bottom: 1px var(--border-subtle)
+│                                                      │  shadow: var(--shadow-xs)
+└─────────────────────────────────────────────────────┘
+Key changes:
+
+Drop glassmorphism -- Replace with solid white (--surface-card) + subtle bottom border + --shadow-xs. Glass is overused and reduces text contrast on varied backgrounds.
+Logo treatment: Create a simple logomark (a stylized "U" sunrise glyph rendered as an inline SVG or icon font) + "UdayaTech" in --font-heading weight 800. The "Udaya" in --brand-700, "Tech" in --accent-500. This replaces the current italic text treatment.
+Search bar: On mobile, show only a search icon that expands into a full-width overlay search on tap. On desktop, show the persistent bar. This frees horizontal space on mobile.
+Icon buttons: 40px touch target, --radius-md rounded, --text-secondary at rest, --brand-600 on hover. Notification bell gets an unread count dot in --accent-500.
+Height: 56px (up from the current ~52px) for better thumb reach and visual breathing.
+3.7 BottomNav (Customer)
+Current problems: Glass background, the active indicator is a small top bar that's easy to miss, icons use brand indigo.
+
+New anatomy:
+
+┌────────────────────────────────────────────┐
+│                                            │  bg: var(--surface-card)
+│  🏠        🏷️       📦       ❤️      👤  │  border-top: 1px var(--border-subtle)
+│  Home    Browse   Orders  Saved   You     │  shadow: var(--shadow-md) upward
+│                                            │  height: 64px + safe-area
+│  ▬ active indicator (bottom, not top)      │
+└────────────────────────────────────────────┘
+Key changes:
+
+Solid background instead of glass. Matches TopBar consistency.
+Active indicator position: Move from top pill to a bottom bar (3px, --brand-500, --radius-full). Bottom is more natural in a bottom nav context.
+Active state: Icon fills + --brand-600 text. Inactive: --text-tertiary.
+Label change: "Categories" becomes "Browse" (shorter, clearer intent). "Wishlist" becomes "Saved" (more universal). "Profile" becomes "You" (intimate, modern).
+Icon size: 22px (slightly smaller than 24px) with 10px labels creates a more refined proportion.
+Touch targets: Each nav item minimum 48px wide, total height 64px.
+3.8 AdminSidebar
+Current problems: Deep indigo sidebar uses a disconnected color from the customer-facing brand. The collapse toggle is a floating white circle that feels foreign.
+
+New anatomy:
+
+Background: var(--admin-bg) (
+#042725, darkest brand teal)
+Hover: var(--admin-bg-hover) (
+#0F3D3A, slightly lighter teal)
+Active indicator: 3px left bar in var(--admin-accent) (amber 
+#FBBF24) -- amber against dark teal is high-contrast and distinctive
+Nav text: var(--admin-text-dim) at rest, var(--admin-text) (mint) on hover/active
+Section labels: var(--admin-text-dim), --text-2xs, letter-spacing: 0.08em
+Logo area: "UT" monogram in --admin-accent when collapsed, full logo when expanded
+Collapse toggle: Integrated into the sidebar bottom as a chevron button in --admin-text-dim, not floating outside
+Nav item radius: var(--radius-sm) with horizontal margin (items don't bleed to sidebar edges)
+3.9 Admin Tables
+New anatomy:
+
+Container: --surface-card, --radius-lg, --shadow-sm, border: 1px var(--border-default)
+Header row: --surface-sunken background, --text-secondary, --text-xs, font-weight: 700, letter-spacing: 0.04em, uppercase
+Data cells: --text-sm, --text-primary
+Row hover: --brand-50 (very subtle teal tint)
+Row borders: 1px var(--border-subtle) (hairline, warm)
+Selected row: --brand-50 persistent bg + 2px left border var(--brand-500)
+Pagination: Integrated with the table footer, using ghost button variants
+Empty state: Illustration + text centered, not just plain text
+3.10 Modals
+New anatomy:
+
+Overlay: var(--surface-overlay) with backdrop-filter: blur(4px)
+Modal container: --surface-card, --radius-xl (20px), --shadow-xl
+Max width: 480px (mobile sheets slide up from bottom)
+Header: --text-xl, --font-heading, weight 700, with a subtle bottom border
+Close button: Top-right, 36px circle, --surface-sunken bg, --text-secondary icon
+Footer actions: Right-aligned, primary button right, secondary left
+Animation: Fade + scale(0.95 to 1.0) entrance, 200ms ease-out
+Mobile behavior: Modals become bottom sheets (anchor to bottom, border-radius: --radius-xl --radius-xl 0 0)
+4. Page-Level Wireframe Guidance
+4.1 HomePage
+┌─────────────────────────────────────┐
+│           TopBar (56px)             │
+├─────────────────────────────────────┤
+│                                     │
+│  ┌─────────────────────────────┐    │  Hero banner section
+│  │  HERO IMAGE / CAROUSEL      │    │  height: 200px mobile, 320px desktop
+│  │  with gradient overlay       │    │  radius: 0 (full bleed)
+│  │  + headline + CTA button    │    │  Dots: bottom-center, pill style
+│  └─────────────────────────────┘    │
+│                                     │
+│  ── Browse by Category ──────────   │  Section heading: --font-heading, 600
+│  ┌──┐ ┌──┐ ┌──┐ ┌──┐ ┌──┐ ────→  │  Horizontal scroll
+│  │📱│ │📷│ │📡│ │🔧│ │📦│        │  56px circles, --radius-full
+│  │Ph│ │CC│ │GP│ │Se│ │Ac│        │  Icon + label below
+│  └──┘ └──┘ └──┘ └──┘ └──┘        │  bg: --brand-50, icon: --brand-600
+│                                     │
+│  ── Why UdayaTech? ──────────────   │  Trust section (NEW)
+│  ┌────────┐┌────────┐┌────────┐    │  3 value props in a row
+│  │ Verified││ Expert ││  Free  │    │  Icon + short text
+│  │Products ││Install ││Support │    │  bg: --surface-sunken, radius-lg
+│  └────────┘└────────┘└────────┘    │
+│                                     │
+│  ── Featured Products ── View All   │  Section with --font-heading title
+│  ┌──────┐ ┌──────┐                  │  2-col grid, gap-3
+│  │ Card │ │ Card │                  │  New card anatomy
+│  │      │ │      │                  │
+│  └──────┘ └──────┘                  │
+│  ┌──────┐ ┌──────┐                  │
+│  │ Card │ │ Card │                  │
+│  └──────┘ └──────┘                  │
+│                                     │
+│  ── Service Bundles ── View All     │  Combo cards: horizontal scroll
+│  ┌──────────┐ ┌──────────┐ ────→   │  Wider cards (280px), --radius-lg
+│  │ Combo    │ │ Combo    │         │  Gradient overlay + price
+│  └──────────┘ └──────────┘         │
+│                                     │
+├─────────────────────────────────────┤
+│          BottomNav (64px)           │
+└─────────────────────────────────────┘
+Key departures from current:
+
+Replace the bg-gradient-to-r from-rose-500 promotional strip with a Trust section ("Why UdayaTech?") -- trust signals convert better than generic deal banners for a lesser-known brand
+Replace gap-px bg-gray-200 grid with spaced cards on warm background
+Add combo/service bundles section (horizontal scroll) -- promotes the dual-commerce model
+4.2 ProductListPage
+┌─────────────────────────────────────┐
+│           TopBar (56px)             │
+├─────────────────────────────────────┤
+│  ┌─ Filter Bar ─────────── 🔽 ┐    │  Sticky below TopBar
+│  │ All  Phones  CCTV  GPS ... │    │  Chips: --radius-sm, not rounded-full
+│  └─────────────────────────────┘    │  Active chip: --brand-600 bg, white text
+│                                     │  Inactive: --surface-card bg, --border-default
+│  Showing 24 items     Sort: ▾      │  Result count + sort dropdown
+│                                     │
+│  ┌──────┐ ┌──────┐                  │  2-col grid, gap-3, px-3
+│  │ Card │ │ Card │                  │  Warm --surface-page background
+│  │      │ │      │                  │
+│  └──────┘ └──────┘                  │
+│  ... infinite scroll / load more    │
+├─────────────────────────────────────┤
+│          BottomNav (64px)           │
+└─────────────────────────────────────┘
+Changes from current:
+
+Filter chips use --radius-sm (soft square) not rounded-full (pill)
+Add sort dropdown (missing in current implementation)
+Cards sit on warm --surface-page with gap, not on hairline grid
+Consider "Load More" button instead of implicit pagination for better perceived control
+4.3 ProductDetailPage
+┌─────────────────────────────────────┐
+│  ← Back    Product Name        ♡   │  Simplified TopBar in detail context
+├─────────────────────────────────────┤
+│  ┌─────────────────────────────┐    │
+│  │    IMAGE GALLERY            │    │  Swipeable, dots indicator
+│  │    (aspect 4:5, full bleed) │    │  Savings chip overlay: top-left
+│  └─────────────────────────────┘    │
+│                                     │
+│  Product Name                       │  --font-heading, 700, --text-xl
+│  Category / Brand                   │  --text-xs, --text-tertiary
+│                                     │
+│  ₹12,999  ₹15,999  Save ₹3,000    │  Price: --text-2xl, weight 800
+│                                     │  Struck: --text-tertiary
+│                                     │  Savings: --accent-500, weight 700
+│  ★ 4.2 (128 ratings)               │  Star: --accent-400 filled
+│                                     │
+│  ── Highlights ──────────────────   │  Key attributes in 2-col grid
+│  │ RAM: 4GB  │ Storage: 64GB  │    │  bg: --surface-sunken, radius-sm
+│  │ Color: Bl │ Warranty: 1yr  │    │
+│                                     │
+│  ── Description ─────────────────   │  Collapsible, show 3 lines + "Read more"
+│  Lorem ipsum dolor sit amet...     │
+│                                     │
+│  ── Includes Installation ────────  │  Service badge if applicable
+│  ┌──────────────────────────────┐  │  bg: --brand-50
+│  │ 🔧 Free professional setup  │  │  border: 1px --brand-200
+│  └──────────────────────────────┘  │  Reinforces service-led brand
+│                                     │
+├─────────────────────────────────────┤
+│  ₹12,999   [ Add to Cart ][ Buy ] │  Sticky bottom bar
+│             secondary      primary │  bg: --surface-card, shadow-float
+└─────────────────────────────────────┘
+4.4 Admin Dashboard
+┌──────────┬──────────────────────────────────────┐
+│          │  Admin > Dashboard          🔔  AK ▾ │
+│  Sidebar │──────────────────────────────────────│
+│          │                                      │
+│  Logo    │  Good morning, Admin                 │  Greeting with --font-heading
+│          │  March 24, 2026                      │
+│  ────    │                                      │
+│  Dash ◀  │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐  │  KPI cards
+│  Products│  │Today │ │Pend │ │Total│ │Rev  │  │  bg: --surface-card
+│  Services│  │  12  │ │  5  │ │ 847 │ │₹24K │  │  Icon in --brand-50 circle
+│  Combos  │  └─────┘ └─────┘ └─────┘ └─────┘  │  Trend: arrow + delta text
+│  Categs  │                                      │
+│  Orders  │  Quick Actions                       │  Buttons: secondary variant
+│  Support │  [+ Product] [+ Service] [+ Banner] │
+│  Banners │                                      │
+│  Users   │  Recent Orders                       │  Table component
+│          │  ┌────────────────────────────────┐  │  New table anatomy
+│  ────    │  │ ID    Status  Amount   Date   │  │
+│  ◁ ▷     │  │ #A23  ●Pend  ₹12,999  Today │  │  Status: colored dot + text
+│          │  │ #A22  ●Conf  ₹8,499   Yest  │  │  instead of full badge
+│          │  └────────────────────────────────┘  │
+└──────────┴──────────────────────────────────────┘
+Changes from current:
+
+KPI card icons use --brand-50 background (not disconnected blue/orange/indigo/green)
+Hardcoded colors like #2874f0 (Flipkart blue!) in the dashboard stats are eliminated
+Greeting replaces sterile "Dashboard" heading
+Quick actions use secondary button variant, not ad-hoc border style
+4.5 Services & Combos Pages
+Follow the same grid/card patterns as ProductListPage, but:
+
+ServiceCard has a "clock" icon with estimated duration and an "Installation Included" badge
+ComboCard is wider (horizontal layout on mobile), showing constituent items as small thumbnails in a row below the main image
+Both card types share the same radius, shadow, and spacing tokens as ProductCard
+4.6 Orders / OrderDetail
+OrdersPage: List layout (not grid), each order is a full-width card with: order ID, date, status badge, item count, total, and a right-chevron
+OrderDetailPage: Timeline-based status tracker at top (vertical dots + lines, active step highlighted in --brand-500), then order items list, then delivery address, then support CTA
+4.7 Login / CompleteProfile
+Centered card layout, max-width 400px
+Logo mark + "UdayaTech" at top
+OTP input: 6 individual digit boxes (not a single input) with auto-advance
+Background: subtle --brand-50 to --surface-page gradient
+"Login" button uses accent variant (amber) for maximum contrast and urgency
+5. Accessibility Rules
+5.1 Color Contrast
+All text on --surface-card (white) must meet WCAG 2.1 AA (4.5:1 for normal text, 3:1 for large text)
+--brand-600 (
+#0A7E72) on white: contrast ratio ~5.2:1 (passes AA)
+--accent-500 (
+#D97706) on white: contrast ratio ~3.8:1 (passes AA for large text only; use --accent-600 for small text on white)
+--text-tertiary (
+#A1A1AA) on white: ~3.5:1 (use only for non-essential decorative text; ensure critical labels use --text-secondary minimum)
+5.2 Focus Management
+All interactive elements must show a visible focus ring: 2px solid var(--brand-500), outline-offset: 2px
+For dark admin surfaces: focus ring 2px solid var(--admin-accent) (amber on dark teal)
+Skip-to-content link at the top of CustomerLayout and AdminLayout
+Modal focus trap: focus must cycle within the modal when open
+5.3 Motion
+All animations respect prefers-reduced-motion: reduce
+Under reduced motion: disable transform transitions, carousel auto-play, and skeleton shimmer
+Implementation in CSS:
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+5.4 Touch Targets
+Minimum 44px x 44px for all interactive elements (buttons, links, nav items)
+BottomNav items: minimum 48px wide
+Input height: 44px minimum
+5.5 Screen Reader
+All icon-only buttons must have aria-label
+Images must have meaningful alt text (product name, not "image")
+Status badges should include role="status" for order status changes
+Form errors should be linked via aria-describedby
+6. Migration Plan
+Phase 1: Token Foundation (Low Risk, No Visual Change)
+Add new CSS variables alongside existing ones in index.css. Don't remove old variables yet.
+Add Plus Jakarta Sans to the Google Fonts import.
+Add new utility classes (.shadow-brand-sm, .radius-lg, etc.) in the @layer utilities block.
+Verify nothing breaks -- this phase is purely additive.
+Phase 2: Core Components (Medium Risk)
+Migrate in this order (each is a single PR):
+
+Order	Component	Effort	Notes
+1	Spinner	5 min	Swap color token only
+2	Badge	15 min	Update color map, change radius
+3	Button	30 min	Rename orange to accent, update all variant styles, update --font-heading
+4	Input	20 min	Update border/focus/label styles, add hint prop
+5	Card	45 min	New layout, aspect ratio, savings format, trust line, in-card CTA
+After each component PR: grep all pages for that component's usage, run visual regression manually on 2-3 key pages.
+
+Button variant rename migration: Search for variant="orange" across all files and replace with variant="accent". There are likely only a handful of call sites. Keep orange as a deprecated alias for one release cycle:
+
+// Temporary back-compat in Button.tsx
+const resolvedVariant = variant === 'orange' ? 'accent' : variant;
+Phase 3: Layout Shell (Medium Risk)
+Order	Component	Effort	Notes
+6	TopBar	30 min	Drop glass, solid bg, new logo, mobile search overlay
+7	BottomNav	20 min	Solid bg, bottom indicator, label rename
+8	CustomerLayout	10 min	Update bg-gray-100 to bg-[--surface-page], adjust padding
+9	AdminSidebar	30 min	New color tokens, integrate collapse button, item radius
+10	AdminLayout	15 min	Update header, breadcrumb colors, #f4f5f7 to --surface-page
+Phase 4: Page-Level Restyling (Higher Risk, Do Incrementally)
+Order	Page	Effort	Notes
+11	HomePage	1-2 hrs	New section structure, trust section, combo scroll
+12	ProductListPage	30 min	Grid spacing, chip style, sort dropdown
+13	ProductDetailPage	1 hr	New layout sections, sticky bottom bar
+14	LoginPage	30 min	Centered card, OTP boxes
+15	Admin DashboardPage	45 min	Eliminate hardcoded colors, greeting, new KPI cards
+16-25	Remaining pages	30 min each	Apply tokens/components, no structural changes needed
+Phase 5: Cleanup
+Remove old CSS variables (--brand, --brand-dark, --brand-light, --orange, --admin-sidebar, --admin-sidebar-hover, --admin-accent).
+Remove deprecated .btn-brand, .btn-orange, .admin-sidebar-* utility classes from index.css.
+Remove App.css (it's Vite boilerplate, unused by the app).
+Audit: Search entire frontend for any remaining hardcoded hex values (especially #2874f0, #4f46e5, #f43f5e, #e68900, #1e1b4b, #312e81, #f4f5f7) and replace with CSS variable references.
+Risk Mitigation
+Never remove old tokens before new ones are fully adopted. The overlap period lets you migrate incrementally.
+Each PR should touch at most one component or one page. Never batch component + page changes.
+Snapshot key pages (HomePage, ProductList, AdminDashboard) before starting. Compare after each PR.
+Mobile-first testing: Test every change on 375px viewport first, then scale up. The current codebase is mobile-first; the migration must maintain that.
+The className prop on every component means any call-site overrides (e.g., inline bg-indigo-500) will survive migration. After Phase 5, grep for Tailwind indigo/rose/slate classes that should have been replaced.
+7. Token Quick Reference Card
+For developer convenience, here's the mapping of old to new:
+
+Old Token / Class	New Token	Notes
+--brand (
+#4f46e5)	--brand-600 (
+#0A7E72)	Primary brand color
+--brand-dark (
+#3730a3)	--brand-700 (
+#0D635B)	Hover/pressed state
+--brand-light (
+#e0e7ff)	--brand-100 (
+#C7FFF0)	Backgrounds/rings
+--orange (
+#f43f5e)	--accent-500 (
+#D97706)	CTA accent
+--admin-sidebar (
+#1e1b4b)	--admin-bg (
+#042725)	Admin sidebar
+--admin-sidebar-hover	--admin-bg-hover (
+#0F3D3A)	Admin hover
+--admin-accent (
+#f43f5e)	--admin-accent (
+#FBBF24)	Admin highlight
+bg-gray-50	bg-[--surface-page]	Page background
+bg-gray-100	bg-[--surface-sunken]	Section dividers
+border-gray-100	border-[--border-subtle]	Subtle borders
+border-gray-300	border-[--border-default]	Default borders
+text-gray-900	text-[--text-primary]	Primary text
+text-gray-600	text-[--text-secondary]	Secondary text
+text-gray-400	text-[--text-tertiary]	Tertiary text
+.glass	Remove	Replace with solid surfaces
+.card-hover	Keep but update shadow values	Use --shadow-sm to --shadow-md
+.btn-brand	Remove	Use Button variant="primary"
+.btn-orange	Remove	Use Button variant="accent"
+rounded-xl on cards	rounded-[var(--radius-lg)]	14px consistently
+rounded-lg on buttons	rounded-[var(--radius-md)]	10px consistently
+rounded-full on badges	rounded-[var(--radius-sm)]	6px, distinctive shape
