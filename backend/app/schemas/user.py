@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, EmailStr
 
@@ -18,6 +19,12 @@ class UserOut(BaseModel):
 
 class UserUpdate(BaseModel):
     name: str | None = None
+
+
+class AdminUserUpdate(BaseModel):
+    name: str | None = None
+    role: Literal["admin", "customer"] | None = None
+    is_verified: bool | None = None
 
 
 class AddressCreate(BaseModel):
