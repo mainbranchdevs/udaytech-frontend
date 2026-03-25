@@ -7,6 +7,7 @@ import type {
   AdminComboCreateInput, AdminComboUpdateInput,
   AdminBannerCreateInput, AdminBannerUpdateInput,
   AdminUsersQuery,
+  AdminUserUpdateInput,
   ImageUploadResponse,
 } from '../types';
 
@@ -93,3 +94,4 @@ export const adminGetCategories = () => api.get<Category[]>('/admin/categories')
 export const adminCreateCategory = (data: { name: string; parent_id?: number }) => api.post<Category>('/admin/categories', data);
 export const adminUpdateCategory = (id: number, data: Partial<Category>) => api.patch<Category>(`/admin/categories/${id}`, data);
 export const adminGetUsers = (params?: AdminUsersQuery) => api.get<User[]>('/admin/users', { params });
+export const adminUpdateUser = (id: string, data: AdminUserUpdateInput) => api.patch<User>(`/admin/users/${id}`, data);

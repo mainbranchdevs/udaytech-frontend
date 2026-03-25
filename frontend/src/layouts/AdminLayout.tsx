@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import AdminSidebar from '../components/layout/AdminSidebar';
 import { useAuth } from '../hooks/useAuth';
 import { BellIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { ToastProvider } from '../components/ui/Toast';
 
 function Breadcrumb() {
   const { pathname } = useLocation();
@@ -26,6 +27,7 @@ export default function AdminLayout() {
   const initials = user ? (user.name || user.email).charAt(0).toUpperCase() : 'A';
 
   return (
+    <ToastProvider>
     <div className="min-h-screen flex" style={{ background: 'var(--surface-page)' }}>
       <AdminSidebar />
 
@@ -81,5 +83,6 @@ export default function AdminLayout() {
         </main>
       </div>
     </div>
+    </ToastProvider>
   );
 }

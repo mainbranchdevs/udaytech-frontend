@@ -1,9 +1,12 @@
 import { useMemo, useState, type CSSProperties } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { adminGetUsers } from '../../api/endpoints';
+import { adminGetUsers, adminUpdateUser } from '../../api/endpoints';
+import Button from '../../components/ui/Button';
 import Spinner from '../../components/ui/Spinner';
 import Badge from '../../components/ui/Badge';
+import { useToast } from '../../components/ui/Toast';
+import type { User } from '../../types';
 
 const cardSurfaceStyle: CSSProperties = {
   background: 'var(--surface-card)',
@@ -13,9 +16,15 @@ const cardSurfaceStyle: CSSProperties = {
 };
 
 export default function AdminUsersPage() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<'all' | 'admin' | 'customer'>('all');
   const [verification, setVerification] = useState<'all' | 'verified' | 'unverified'>('all');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
+  const [editingRole, setEditingRole] = useState<'admin' | 'customer'>('customer');
+  const [editingVerified, setEditingVerified] = useState(false);
 
   const queryParams = useMemo(() => ({
     search: search.trim() || undefined,
@@ -27,6 +36,42 @@ export default function AdminUsersPage() {
     queryKey: ['admin', 'users', queryParams],
     queryFn: () => adminGetUsers(queryParams).then((r) => r.data),
   });
+
+  const updateMut = useMutation({
+    mutationFn: (payload: { id: string; data: { name?: string | null; role?: 'admin' | 'customer'; is_verified?: boolean } }) =>
+      adminUpdateUser(payload.id, payload.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+      setEditingId(null);
+      toast('User updated', 'success');
+    },
+    onError: () => toast('Failed to update user', 'error'),
+  });
+
+  const startEditing = (user: User) => {
+    setEditingId(user.id);
+    setEditingName(user.name ?? '');
+    setEditingRole(user.role);
+    setEditingVerified(user.is_verified);
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditingName('');
+  };
+
+  const saveUser = (user: User) => {
+    const nextName = editingName.trim();
+    const payload: { name?: string | null; role?: 'admin' | 'customer'; is_verified?: boolean } = {};
+    if (nextName !== (user.name ?? '')) payload.name = nextName || null;
+    if (editingRole !== user.role) payload.role = editingRole;
+    if (editingVerified !== user.is_verified) payload.is_verified = editingVerified;
+    if (!Object.keys(payload).length) {
+      setEditingId(null);
+      return;
+    }
+    updateMut.mutate({ id: user.id, data: payload });
+  };
 
   return (
     <div>
@@ -97,10 +142,10 @@ export default function AdminUsersPage() {
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="border-b" style={{ background: 'var(--surface-sunken)', borderColor: 'var(--border-subtle)' }}>
-                  {['User', 'Email', 'Role', 'Verified', 'Joined'].map((h) => (
+                  {['User', 'Email', 'Role', 'Verified', 'Joined', 'Actions'].map((h) => (
                     <th
                       key={h}
-                      className={`px-5 py-3 text-xs font-bold uppercase tracking-wider ${h === 'Joined' ? 'text-right' : 'text-left'}`}
+                      className={`px-5 py-3 text-xs font-bold uppercase tracking-wider ${h === 'Joined' || h === 'Actions' ? 'text-right' : 'text-left'}`}
                       style={{ color: 'var(--text-secondary)' }}
                     >
                       {h}
@@ -111,6 +156,7 @@ export default function AdminUsersPage() {
               <tbody className="divide-y divide-[var(--border-subtle)]">
                 {users.map((u) => {
                   const initials = (u.name || u.email).charAt(0).toUpperCase();
+                  const isEditing = editingId === u.id;
                   return (
                     <tr key={u.id} className="transition-colors hover:!bg-[var(--brand-50)]">
                       <td className="px-5 py-3.5">
@@ -121,20 +167,83 @@ export default function AdminUsersPage() {
                           >
                             {initials}
                           </div>
-                          <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{u.name || '—'}</span>
+                          {isEditing ? (
+                            <input
+                              value={editingName}
+                              onChange={(e) => setEditingName(e.target.value)}
+                              placeholder="Name"
+                              className="w-full min-w-[140px] rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[--brand-500]"
+                              style={{ border: '1px solid var(--border-default)' }}
+                            />
+                          ) : (
+                            <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{u.name || '—'}</span>
+                          )}
                         </div>
                       </td>
                       <td className="px-5 py-3.5 text-xs" style={{ color: 'var(--text-secondary)' }}>{u.email}</td>
                       <td className="px-5 py-3.5">
-                        <Badge variant={u.role === 'admin' ? 'admin' : 'user'}>{u.role}</Badge>
+                        {isEditing ? (
+                          <select
+                            value={editingRole}
+                            onChange={(e) => setEditingRole(e.target.value as 'admin' | 'customer')}
+                            className="rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[--brand-500]"
+                            style={{ border: '1px solid var(--border-default)' }}
+                          >
+                            <option value="admin">admin</option>
+                            <option value="customer">customer</option>
+                          </select>
+                        ) : (
+                          <Badge variant={u.role === 'admin' ? 'admin' : 'user'}>{u.role}</Badge>
+                        )}
                       </td>
                       <td className="px-5 py-3.5">
-                        <Badge variant={u.is_verified ? 'success' : 'warning'}>
-                          {u.is_verified ? 'Verified' : 'Pending'}
-                        </Badge>
+                        {isEditing ? (
+                          <select
+                            value={editingVerified ? 'verified' : 'unverified'}
+                            onChange={(e) => setEditingVerified(e.target.value === 'verified')}
+                            className="rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[--brand-500]"
+                            style={{ border: '1px solid var(--border-default)' }}
+                          >
+                            <option value="verified">Verified</option>
+                            <option value="unverified">Pending</option>
+                          </select>
+                        ) : (
+                          <Badge variant={u.is_verified ? 'success' : 'warning'}>
+                            {u.is_verified ? 'Verified' : 'Pending'}
+                          </Badge>
+                        )}
                       </td>
                       <td className="px-5 py-3.5 text-right text-xs" style={{ color: 'var(--text-secondary)' }}>
                         {new Date(u.created_at).toLocaleDateString('en-IN')}
+                      </td>
+                      <td className="px-5 py-3.5 text-right">
+                        {isEditing ? (
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={updateMut.isPending}
+                              onClick={cancelEditing}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              size="sm"
+                              loading={updateMut.isPending}
+                              onClick={() => saveUser(u)}
+                            >
+                              Save
+                            </Button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => startEditing(u)}
+                            className="px-3 py-1 text-xs font-semibold rounded-md transition-colors hover:bg-[color:var(--brand-100)]"
+                            style={{ background: 'var(--brand-50)', color: 'var(--brand-600)' }}
+                          >
+                            Edit
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );

@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
 import Spinner from './Spinner';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,9 +18,23 @@ const variantStyles: Record<string, string> = {
 };
 
 const sizeStyles: Record<string, string> = {
-  sm: 'h-8 px-4 text-[length:var(--text-xs)]',
-  md: 'h-10 px-5 text-[length:var(--text-sm)]',
-  lg: 'h-12 px-6 text-[length:var(--text-base)]',
+  sm: 'h-8 px-4',
+  md: 'h-10 px-5',
+  lg: 'h-12 px-6',
+};
+
+const sizeFontSize: Record<string, string> = {
+  sm: 'var(--text-xs)',
+  md: 'var(--text-sm)',
+  lg: 'var(--text-base)',
+};
+
+const variantFallbackStyle: Record<string, CSSProperties> = {
+  primary: { backgroundColor: 'var(--brand-600)', color: 'var(--text-inverse)' },
+  accent: { backgroundColor: 'var(--accent-500)', color: 'var(--text-inverse)' },
+  secondary: { backgroundColor: 'transparent', color: 'var(--brand-600)' },
+  ghost: { backgroundColor: 'transparent', color: 'var(--text-secondary)' },
+  danger: { backgroundColor: 'var(--danger)', color: 'var(--text-inverse)' },
 };
 
 export default function Button({
@@ -34,6 +48,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const resolved = variant === 'orange' ? 'accent' : variant;
+  const fallbackStyle = variantFallbackStyle[resolved];
   const shadow = resolved === 'primary' || resolved === 'accent'
     ? { boxShadow: 'var(--shadow-accent)' }
     : resolved === 'secondary'
@@ -54,7 +69,9 @@ export default function Button({
       `.trim()}
       style={{
         fontFamily: 'var(--font-heading)',
+        fontSize: sizeFontSize[size],
         borderRadius: 'var(--radius-md)',
+        ...fallbackStyle,
         ...shadow,
       }}
       {...props}

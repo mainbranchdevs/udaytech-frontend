@@ -246,6 +246,12 @@ export interface AdminUsersQuery {
   is_verified?: boolean;
 }
 
+export interface AdminUserUpdateInput {
+  name?: string | null;
+  role?: 'admin' | 'customer';
+  is_verified?: boolean;
+}
+
 export interface ImageUploadResponse {
   image_url: string;
 }

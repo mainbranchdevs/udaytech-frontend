@@ -8,7 +8,7 @@ import Input from '../components/ui/Input';
 
 function OtpBoxes({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const refs = useRef<(HTMLInputElement | null)[]>([]);
-  const digits = value.padEnd(6, '').split('').slice(0, 6);
+  const digits = Array.from({ length: 6 }, (_, i) => value[i] ?? '');
 
   const handleChange = useCallback((idx: number, char: string) => {
     const clean = char.replace(/\D/g, '').slice(-1);
