@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { ChevronRightIcon, ShieldCheckIcon, WrenchScrewdriverIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { getBanners, getCategories, getProducts, getCombos } from '../api/endpoints';
-import Spinner from '../components/ui/Spinner';
 import Skeleton from '../components/ui/Skeleton';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
