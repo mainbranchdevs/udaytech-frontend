@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* ── Brand (Teal-Green) ── */
+    --brand-50:  #EFFEF9;
+    --brand-100: #C7FFF0;
+    --brand-200: #90FFE1;
+    --brand-300: #4AEDD0;
+    --brand-400: #1AD4B8;
+    --brand-500: #0A9E8B;
+    --brand-600: #0A7E72;
+    --brand-700: #0D635B;
+    --brand-800: #104F49;
+    --brand-900: #0F3D3A;
+    --brand-950: #042725;
+
+    /* ── Accent (Sunrise Amber) ── */
+    --accent-50:  #FFFBEB;
+    --accent-100: #FEF3C7;
+    --accent-200: #FDE68A;
+    --accent-300: #FCD34D;
+    --accent-400: #FBBF24;
+    --accent-500: #D97706;
+    --accent-600: #B45309;
+    --accent-700: #92400E;
+
+    /* ── Semantic ── */
+    --success:       #059669;
+    --success-light:  #D1FAE5;
+    --danger:        #DC2626;
+    --danger-light:   #FEE2E2;
+    --warning:       #D97706;
+    --warning-light:  #FEF3C7;
+    --info:          #0284C7;
+    --info-light:     #E0F2FE;
+
+    /* ── Surfaces ── */
+    --surface-page:    #FAFAF7;
+    --surface-card:    #FFFFFF;
+    --surface-raised:  #FFFFFF;
+    --surface-sunken:  #F5F3EF;
+    --surface-overlay: rgba(0, 0, 0, 0.45);
+
+    /* ── Text ── */
+    --text-primary:   #1A1A2E;
+    --text-secondary: #52525B;
+    --text-tertiary:  #A1A1AA;
+    --text-inverse:   #FFFFFF;
+    --text-brand:     #0A7E72;
+    --text-accent:    #B45309;
+
+    /* ── Borders ── */
+    --border-default: #E4E4E7;
+    --border-subtle:  #F0EEEA;
+    --border-focus:   #0A7E72;
+
+    /* ── Admin palette ── */
+    --admin-bg:       #042725;
+    --admin-bg-hover: #0F3D3A;
+    --admin-accent:   #FBBF24;
+    --admin-text:     #C7FFF0;
+    --admin-text-dim: rgba(199, 255, 240, 0.4);
+
+    /* ── Typography ── */
+    --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:    'Inter', system-ui, sans-serif;
+    --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+    --text-2xs:  0.625rem;
+    --text-xs:   0.75rem;
+    --text-sm:   0.875rem;
+    --text-base: 1rem;
+    --text-lg:   1.125rem;
+    --text-xl:   1.25rem;
+    --text-2xl:  1.5rem;
+    --text-3xl:  1.875rem;
+
+    --leading-tight:   1.2;
+    --leading-snug:    1.35;
+    --leading-normal:  1.5;
+    --leading-relaxed: 1.65;
+
+    /* ── Spacing (6px base) ── */
+    --space-1:  6px;
+    --space-2:  12px;
+    --space-3:  18px;
+    --space-4:  24px;
+    --space-5:  30px;
+    --space-6:  36px;
+    --space-8:  48px;
+    --space-10: 60px;
+    --space-12: 72px;
+    --space-16: 96px;
+
+    /* ── Border Radius ── */
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   14px;
+    --radius-xl:   20px;
+    --radius-full: 9999px;
+
+    /* ── Shadows (Brand-Tinted) ── */
+    --shadow-xs:     0 1px 2px rgba(10, 126, 114, 0.04);
+    --shadow-sm:     0 2px 6px rgba(10, 126, 114, 0.06);
+    --shadow-md:     0 4px 12px rgba(10, 126, 114, 0.08);
+    --shadow-lg:     0 8px 24px rgba(10, 126, 114, 0.10);
+    --shadow-xl:     0 16px 48px rgba(10, 126, 114, 0.12);
+    --shadow-accent: 0 4px 14px rgba(217, 119, 6, 0.30);
+    --shadow-float:  0 12px 36px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--text-primary);
+    background: var(--surface-page);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    line-height: var(--leading-tight);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--surface-sunken);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-default);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-500);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    background: linear-gradient(90deg, var(--brand-50) 25%, var(--brand-100) 50%, var(--brand-50) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Logo recoloring filters (black → target color) */
+  .logo-brand {
+    filter: invert(39%) sepia(85%) saturate(450%) hue-rotate(148deg) brightness(88%) contrast(96%);
+  }
+  .logo-amber {
+    filter: invert(81%) sepia(52%) saturate(2065%) hue-rotate(3deg) brightness(103%) contrast(97%);
+  }
+  .logo-light {
+    filter: invert(86%) sepia(18%) saturate(670%) hue-rotate(100deg) brightness(104%) contrast(101%);
+  }
+
+}
